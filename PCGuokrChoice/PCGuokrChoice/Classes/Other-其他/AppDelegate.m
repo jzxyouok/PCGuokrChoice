@@ -7,6 +7,10 @@
 //
 
 #import "AppDelegate.h"
+#import <IIViewDeckController.h>
+#import "PCBaseViewController.h"
+#import "PCHomeViewController.h"
+#import "PCLeftViewController.h"
 
 @interface AppDelegate ()
 
@@ -17,6 +21,30 @@
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
     // Override point for customization after application launch.
+    
+    self.window = [[UIWindow alloc] initWithFrame:[UIScreen mainScreen].bounds];
+    
+    //创建中间的视图控制器
+    PCBaseViewController * centerVC = [[PCBaseViewController alloc] init];
+    UINavigationController * navVC = [[UINavigationController alloc] initWithRootViewController:centerVC];
+    
+    
+    //创建左菜单栏视图控制器
+    PCLeftViewController * leftVC = [[PCLeftViewController alloc] init];
+    
+    
+    //创建deckController
+    IIViewDeckController * deckController = [[IIViewDeckController alloc] initWithCenterViewController:navVC leftViewController:leftVC rightViewController:nil];
+    deckController.centerhiddenInteractivity = IIViewDeckCenterHiddenNotUserInteractiveWithTapToClose;//打开leftVC时，触摸centerVC则关闭leftVC
+    deckController.elastic = NO;//去掉centerVC的弹性效果
+    deckController.shadowEnabled = NO;//去掉centerVC与leftVC之间的阴影过渡
+#warning Why -> 这个leftSize还不是很明白
+    deckController.leftSize = [UIScreen mainScreen].bounds.size.width / 3 ;
+    
+    self.window.rootViewController = deckController;
+    //    self.window.backgroundColor = [UIColor darkGrayColor];
+    [self.window makeKeyAndVisible];
+    
     return YES;
 }
 
